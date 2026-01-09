@@ -2,6 +2,17 @@
 
 <img src="project_logo.png" alt="logo" width="300"/>
 
+```grooy
+repositories {
+    //...
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'io.github.jzlhll:module-ausimplepermission:0.9.0'
+}
+```
+
 **Android权限管理模块，提供简化的权限申请和系统交互API。**
 
 - minSdk: 24   compileSdk: 36
