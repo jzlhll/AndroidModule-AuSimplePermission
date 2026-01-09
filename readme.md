@@ -154,8 +154,6 @@ val cameraAndSelectHelper = CameraAndSelectPhotosPermissionHelper(this, 9, suppl
 // 1. 通知权限申请,android13会包裹，android12直接执行
 val notificationResult = createPostNotificationPermissionResult()
 
-// 2. 简易通知工具
-val notificationUtil = NotificationUtil(this)
 
 fun showNotification() {
     // 申请权限并执行
@@ -163,18 +161,28 @@ fun showNotification() {
         // 权限未获取，提示用户去设置开启
         //showToast("请先开启通知权限")
     }) {
-        // 权限已获取，发送通知
-        notificationUtil.notificationSimpleText(
-            id = 1001,
-            channelId = "default_channel",
-            title = "标题",
-            content = "内容",
-            smallIcon = R.drawable.ic_notification
-        )
+        //do somethings.
     }
 }
 ```
 
+或者如果仅仅是文字通知可以直接使用Util类：
+
+```kotlin
+// 2. 简易通知工具。
+val notificationUtil = NotificationUtil(this)
+
+fun just() {
+    // 权限已获取，发送通知
+    notificationUtil.notificationSimpleText(
+        id = 1001,
+        channelId = "default_channel",
+        title = "标题",
+        content = "内容",
+        smallIcon = R.drawable.ic_notification
+    )
+}
+```
 ##### 4. 特殊系统权限跳转
 
 提供了便捷的扩展函数用于检查和跳转特殊权限设置页。
