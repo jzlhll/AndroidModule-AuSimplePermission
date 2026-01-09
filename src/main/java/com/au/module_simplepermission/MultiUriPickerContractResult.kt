@@ -6,19 +6,17 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityOptionsCompat
-import androidx.fragment.app.Fragment
 
 /**
  * @author allan
  * @date :2024/10/23 16:39
  * @description:
  */
-class MultiUriPickerContractResult(
-    fragment: Fragment,
+open class MultiUriPickerContractResult(
+    cxt: Any,
     var max:Int,
-    val resultContract: ActivityResultContract<PickVisualMediaRequest, List<@JvmSuppressWildcards Uri>>
-)
-    : IContractResult<PickVisualMediaRequest, List<@JvmSuppressWildcards Uri>>(fragment, resultContract) {
+    val resultContract: ActivityResultContract<PickVisualMediaRequest, List<@JvmSuppressWildcards Uri>>)
+            : IContractResult<PickVisualMediaRequest, List<@JvmSuppressWildcards Uri>>(cxt, resultContract) {
     private var allCallback:((Array<Uri>)->Unit)? = null
 
     fun setCurrentMaxItems(max:Int) : MultiUriPickerContractResult {
@@ -32,15 +30,16 @@ class MultiUriPickerContractResult(
         allCallback?.invoke(result.toTypedArray())
     }
 
-    /**
-     * 可以使用。但推荐使用oneByOne。
-     */
-    fun launchByAll(type: PickerType, option: ActivityOptionsCompat?, callback:(Array<Uri>)->Unit) {
-        this.allCallback = callback
-        launchCommon(type, option)
+    @Deprecated("replace call launchByAll(type: PickerType, ...)")
+    override fun start(
+        input: PickVisualMediaRequest,
+        callback: ActivityResultCallback<List<@JvmSuppressWildcards Uri>>?
+    ) {
+        throw RuntimeException("Please call launchByAll(type:PickerType, ...)")
     }
 
-    private fun launchCommon(type: PickerType, option: ActivityOptionsCompat?) {
+    open fun launchByAll(type: PickerType, option: ActivityOptionsCompat? = null, callback:(Array<Uri>)->Unit) {
+        this.allCallback = callback
         setResultCallback {
             resultCallback(it)
         }
@@ -52,12 +51,5 @@ class MultiUriPickerContractResult(
         }
 
         launcher.launch(intent, option)
-    }
-
-    override fun start(
-        input: PickVisualMediaRequest,
-        callback: ActivityResultCallback<List<@JvmSuppressWildcards Uri>>?
-    ) {
-        //do nothing.
     }
 }
